@@ -7,6 +7,7 @@
 set -Eeuo pipefail
 trap cleanup SIGINT SIGTERM ERR EXIT
 
+# shellcheck disable=SC2034
 script_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd -P)
 
 usage() {
@@ -41,6 +42,7 @@ setup_colors() {
 	if [[ -t 2 ]] && [[ -z "${NO_COLOR-}" ]] && [[ "${TERM-}" != "dumb" ]]; then
 		NOFORMAT='\033[0m' RED='\033[0;31m' GREEN='\033[0;32m' ORANGE='\033[0;33m' BLUE='\033[0;34m' PURPLE='\033[0;35m' CYAN='\033[0;36m' YELLOW='\033[1;33m'
 	else
+		# shellcheck disable=SC2034
 		NOFORMAT='' RED='' GREEN='' ORANGE='' BLUE='' PURPLE='' CYAN='' YELLOW=''
 	fi
 }
@@ -250,6 +252,6 @@ if [[ ! -f "${ia_certs}/${out_name}.cert-chain.pem" ]]; then
 	cat "${ia_certs}/${out_name}.cert.pem" "${ia_certs}/ca-chain.cert.pem" >"${ia_certs}/${out_name}.cert-chain.pem"
 fi
 
-[[ ${verbose} == 1 ]] && msg msg "Verifying the certificate\n"
-[[ ${verbose} == 1 ]] && msg $openssl x509 -noout -text -in "${ia_certs}/${out_name}.cert.pem"
-[[ ${verbose} == 1 ]] && msg $openssl verify -CAfile "${ia_certs}/ca-chain.cert.pem" "${ia_certs}/${out_name}.cert.pem"
+[[ ${verbose} == 1 ]] && msg "Verifying the certificate\n"
+[[ ${verbose} == 1 ]] && $openssl x509 -noout -text -in "${ia_certs}/${out_name}.cert.pem"
+[[ ${verbose} == 1 ]] && $openssl verify -CAfile "${ia_certs}/ca-chain.cert.pem" "${ia_certs}/${out_name}.cert.pem"
