@@ -41,6 +41,26 @@ You can now invoke the scripts with the `-l /usr/local/opt/openssl@3/bin/openssl
 **Hint:** the older [OpenSSL 1.1](https://formulae.brew.sh/formula/openssl@1.1) can also be used and works exactly the
 same.
 
+Additionally, a GNU compatible `date` binary is required, for example available via:
+
+```bash
+$ brew info coreutils
+# Documentation and Caveats...
+If you need to use these commands with their normal names, you can add a "gnubin" directory to your PATH with:
+  PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+# ...
+# This means that date should be available at /usr/local/opt/coreutils/libexec/gnubin/date
+$ /usr/local/opt/coreutils/libexec/gnubin/date --version
+date (GNU coreutils) 9.0
+```
+
+If you don't want to put this permanently onto your path you can simply prefix any `./scripts/*.sh` invocations with
+`PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"`, i.e.:
+
+```bash
+$ PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH" ./scripts/host-certificate.sh
+```
+
 ### Windows
 
 - For a Bash based environment it is easiest to use [Git for Windows](https://gitforwindows.org)
