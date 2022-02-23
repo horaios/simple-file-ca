@@ -22,6 +22,7 @@ Available options:
 -f, --force     WILL OVERWRITE EXISTING CERTIFICATE
 -n, --name      Name of the CA
 -p, --pw        OpenSSH Key passphrase
+-t, --type      OpenSSH supported key type (defaults to RSA with 4096 bits)
 EOF
 	exit
 }
@@ -58,6 +59,7 @@ parse_params() {
 	force=0
 	name=''
 	pw="${SIMPLE_CA_SSH_PASSWORD-}"
+	type="rsa"
 
 	while :; do
 		case "${1-}" in
@@ -79,6 +81,10 @@ parse_params() {
 			;;
 		-p | --pw)
 			pw="${2-}"
+			shift
+			;;
+		-t | --type)
+			type="${2-}"
 			shift
 			;;
 		-?*) die "Unknown option: $1" ;;
@@ -112,9 +118,16 @@ fi
 if [[ ! -f "${ca}" || ${force} == 1 ]]; then
 	message=$(printf "Generating OpenSSH CA Key Pair at %s\n" "${data_dir}")
 	msg "${message}"
-	ssh-keygen -f "${data_dir}/ca" \
-		-t rsa \
-		-b 4096 \
-		-N "${pw}" \
-		-C "${comment}"
+	if [[ "${type}" == "rsa" ]]; then
+		ssh-keygen -f "${data_dir}/ca" \
+			-t rsa \
+			-b 4096 \
+			-N "${pw}" \
+			-C "${comment}"
+	else
+		ssh-keygen -f "${data_dir}/ca" \
+			-t "${type}" \
+			-N "${pw}" \
+			-C "${comment}"
+	fi
 fi
