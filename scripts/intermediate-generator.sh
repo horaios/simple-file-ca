@@ -73,7 +73,7 @@ parse_params() {
 	a_unit=''
 	config=''
 	data_dir=''
-	expiry=7300
+	expiry=3650
 	force=0
 	ia_pw="${SIMPLE_CA_INTERMEDIATE_PASSWORD-}"
 	openssl=$(which openssl)
