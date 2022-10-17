@@ -108,11 +108,21 @@ keyUsage                        = critical, digitalSignature, cRLSign, keyCertSi
 # Extensions for client certificates (`man x509v3_config`).
 basicConstraints                = CA:FALSE
 nsCertType                      = client, email
-nsComment                       = "OpenSSL Generated Client Certificate"
+nsComment                       = "OpenSSL Generated User Certificate"
 subjectKeyIdentifier            = hash
 authorityKeyIdentifier          = keyid,issuer
 keyUsage                        = critical, nonRepudiation, digitalSignature, keyEncipherment
 extendedKeyUsage                = clientAuth, emailProtection
+
+[ client_cert ]
+# Extensions for client certificates (`man x509v3_config`).
+basicConstraints                = CA:FALSE
+nsCertType                      = client
+nsComment                       = "OpenSSL Generated Client Certificate"
+subjectKeyIdentifier            = hash
+authorityKeyIdentifier          = keyid,issuer
+keyUsage                        = critical, digitalSignature, keyEncipherment
+extendedKeyUsage                = clientAuth
 
 [ server_cert ]
 # Extensions for server certificates (`man x509v3_config`).
@@ -128,7 +138,7 @@ extendedKeyUsage                = serverAuth
 # Extensions for server certificates (`man x509v3_config`).
 basicConstraints                = CA:FALSE
 nsCertType                      = client, server
-nsComment                       = "OpenSSL Generated Server Certificate"
+nsComment                       = "OpenSSL Generated Server/Client Certificate"
 subjectKeyIdentifier            = hash
 authorityKeyIdentifier          = keyid,issuer:always
 keyUsage                        = critical, digitalSignature, keyEncipherment

@@ -78,7 +78,7 @@ stateOrProvinceName             = Baden-Württemberg
 localityName                    = Musterstadt
 0.organizationName              = Example GmbH
 organizationalUnitName          = Example GmbH Root Certificate Authority
-commonName                      = example GmbH Root CA
+commonName                      = Example GmbH Root CA
 emailAddress                    = email@example.org
 
 # Optionally, specify some defaults.
