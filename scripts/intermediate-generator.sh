@@ -15,24 +15,25 @@ usage() {
 Usage: $(basename "${BASH_SOURCE[0]}") [-h] [-v]
 This script can be used to generate an intermediate certificate authority.
 Available options:
--h, --help      Print this help and exit
--v, --verbose   Print script debug info
--c, --config    OpenSSL intermediate CA configuration file
--d, --data-dir  Target directory where to store the CA
--e, --expiry    After how many days the certificate expires (default 3650)
--f, --force     WILL OVERWRITE EXISTING CERTIFICATE
--g, --ra-config OpenSSL root CA configuration file
--i, --city      City of the certificate authority
--l, --openssl   The path to the OpenSSL binary to use
--m, --email     E-Mail of the certificate authority
--n, --cname     Common name for the certificate authority
--o, --org       Organization of the certificate authority
--p, --pw        Supply the intermediate authority password
--r, --ra-dir    Location of the root authority
--s, --state     State/Province of the certificate authority
--t, --unit      Organizational Unit of the certificate authority
--u, --country   Country of the certificate authority
--w, --ra-pw     Supply the root authority password
+-h, --help                Print this help and exit
+-v, --verbose             Print script debug info
+-c, --config              OpenSSL intermediate CA configuration file
+-d, --data-dir            Target directory where to store the CA
+-e, --expiry              After how many days the certificate expires (default 3650)
+-E, --elliptic-curve      Use elliptic curve cryptography instead of default RSA
+-f, --force               WILL OVERWRITE EXISTING CERTIFICATE
+-g, --ra-config           OpenSSL root CA configuration file
+-i, --city                City of the certificate authority
+-l, --openssl             The path to the OpenSSL binary to use
+-m, --email               E-Mail of the certificate authority
+-n, --cname               Common name for the certificate authority
+-o, --org                 Organization of the certificate authority
+-p, --pw                  Supply the intermediate authority password
+-r, --ra-dir              Location of the root authority
+-s, --state               State/Province of the certificate authority
+-t, --unit                Organizational Unit of the certificate authority
+-u, --country             Country of the certificate authority
+-w, --ra-pw               Supply the root authority password
 EOF
 	exit
 }
@@ -72,6 +73,8 @@ parse_params() {
 	a_state=''
 	a_unit=''
 	config=''
+	cryptography='-algorithm RSA -pkeyopt rsa_keygen_bits:4096'
+	signature='sha256'
 	data_dir=''
 	expiry=3650
 	force=0
@@ -98,6 +101,10 @@ parse_params() {
 		-e | --expiry)
 			expiry="${2-}"
 			shift
+			;;
+		-E | --elliptic-curve)
+			cryptography='-algorithm EC -pkeyopt ec_paramgen_curve:P-384 -pkeyopt ec_param_enc:named_curve'
+			signature='sha384'
 			;;
 		-f | --force) force=1 ;;
 		-g | --ra-config)
@@ -200,7 +207,8 @@ $openssl rand -hex 16 >"${ia_dir}/crlnumber"
 [[ -f "${ia_private}/ia.key.pem" ]] && msg "${YELLOW}Private key was already generated, will not overwrite.${NOFORMAT}"
 if [[ ! -f "${ia_private}/ia.key.pem" ]]; then
 	msg "Creating key for the intermediate certificate authority\n"
-	$openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 \
+	# shellcheck disable=SC2086
+	$openssl genpkey $cryptography \
 		-out "${ia_private}/ia.key.pem" \
 		-aes-256-cbc -pass "pass:${ia_pw}"
 fi
@@ -223,7 +231,7 @@ if [[ ! -f "${ia_certs}/ia.cert.pem" ]]; then
 		$openssl req -batch \
 		-config "${config}" \
 		-key "${ia_private}/ia.key.pem" \
-		-sha256 \
+		"-${signature}" \
 		-new \
 		-out "${ra_csr}/$(date -I)-${a_cname}.csr.pem" \
 		-passin "pass:${ia_pw}"
@@ -238,7 +246,7 @@ if [[ ! -f "${ia_certs}/ia.cert.pem" ]]; then
 		-days "${expiry}" \
 		-extensions v3_intermediate_ca \
 		-in "${ra_csr}/$(date -I)-${a_cname}.csr.pem" \
-		-md sha256 \
+		-md "${signature}" \
 		-notext \
 		-out "${ia_certs}/ia.cert.pem" \
 		-passin "pass:${ra_pw}"

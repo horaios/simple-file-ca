@@ -15,20 +15,21 @@ usage() {
 Usage: $(basename "${BASH_SOURCE[0]}") [-h] [-v]
 This script can be used to generate certificate requests to be signed by the intermediate authority.
 Available options:
--h, --help      Print this help and exit
--v, --verbose   Print script debug info
--c, --config    OpenSSL intermediate CA configuration file
--d, --data-dir  Location of the intermediate authority
--e, --expiry    After how many days the certificate expires (default 375)
--f, --force     WILL OVERWRITE EXISTING CERTIFICATE
--i, --ips       IPs (Subject Alt Names), a comma separated list of IPs
--l, --openssl   The path to the OpenSSL binary to use
--n, --cname     Common name for the certificate
--m, --client    Request a client certificate
--o, --out-name  Output name of the certificate and key, defaults to 'cname'
--p, --pw        Supply the intermediate authority password
--s, --server    Request a server certificate
--t, --alt-names DNS entries (Subject Alt Names), a comma separated list
+-h, --help                Print this help and exit
+-v, --verbose             Print script debug info
+-c, --config              OpenSSL intermediate CA configuration file
+-d, --data-dir            Location of the intermediate authority
+-e, --expiry              After how many days the certificate expires (default 375)
+-E, --elliptic-curve      Use elliptic curve cryptography instead of default RSA
+-f, --force               WILL OVERWRITE EXISTING CERTIFICATE
+-i, --ips                 IPs (Subject Alt Names), a comma separated list of IPs
+-l, --openssl             The path to the OpenSSL binary to use
+-n, --cname               Common name for the certificate
+-m, --client              Request a client certificate
+-o, --out-name            Output name of the certificate and key, defaults to 'cname'
+-p, --pw                  Supply the intermediate authority password
+-s, --server              Request a server certificate
+-t, --alt-names           DNS entries (Subject Alt Names), a comma separated list
 EOF
 	exit
 }
@@ -65,6 +66,8 @@ parse_params() {
 	client=0
 	cname=''
 	config=''
+	cryptography='-algorithm RSA -pkeyopt rsa_keygen_bits:4096'
+	signature='sha256'
 	data_dir=''
 	expiry=375
 	force=0
@@ -90,6 +93,10 @@ parse_params() {
 		-e | --expiry)
 			expiry="${2-}"
 			shift
+			;;
+		-E | --elliptic-curve)
+			cryptography='-algorithm EC -pkeyopt ec_paramgen_curve:P-384 -pkeyopt ec_param_enc:named_curve'
+			signature='sha384'
 			;;
 		-f | --force) force=1 ;;
 		-i | --ips)
@@ -204,7 +211,8 @@ fi
 [[ -f "${ia_private}/${out_name}.key.pem" ]] && msg "${YELLOW}Private key was already generated, will not overwrite.${NOFORMAT}"
 if [[ ! -f "${ia_private}/${out_name}.key.pem" ]]; then
 	msg "Creating key for the given cname\n"
-	$openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 \
+	# shellcheck disable=SC2086
+	$openssl genpkey $cryptography \
 		-out "${ia_private}/${out_name}.key.pem"
 fi
 
@@ -227,7 +235,7 @@ if [[ ! -f "${ia_certs}/${out_name}.cert.pem" ]]; then
 		-config "${config}" \
 		-addext "subjectAltName=${san}" \
 		-key "${ia_private}/${out_name}.key.pem" \
-		-sha256 \
+		"-${signature}" \
 		-new \
 		-out "${ia_csr}/$(date -I)-${out_name}.csr.pem" \
 		-subj "${cname_windows_fix}/CN=${cname}"
@@ -240,7 +248,7 @@ if [[ ! -f "${ia_certs}/${out_name}.cert.pem" ]]; then
 		-days "${expiry}" \
 		-extensions "${extensions}" \
 		-in "${ia_csr}/$(date -I)-${out_name}.csr.pem" \
-		-md sha256 \
+		-md "${signature}" \
 		-notext \
 		-out "${ia_certs}/${out_name}.cert.pem" \
 		-passin "pass:${ia_pw}"

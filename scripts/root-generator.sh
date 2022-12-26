@@ -20,6 +20,7 @@ Available options:
 -c, --config              OpenSSL configuration file
 -d, --data-dir            Target directory where to store the CA
 -e, --expiry              After how many days the certificate expires (default 7300)
+-E, --elliptic-curve      Use elliptic curve cryptography instead of default RSA
 -f, --force               WILL OVERWRITE EXISTING CERTIFICATE
 -i, --city                City of the certificate authority
 -l, --openssl             The path to the OpenSSL binary to use
@@ -71,6 +72,8 @@ parse_params() {
 	a_unit=''
 	a_name_constraints=''
 	config=''
+	cryptography='-algorithm RSA -pkeyopt rsa_keygen_bits:4096'
+	signature='-sha256'
 	data_dir=''
 	expiry=7300
 	force=0
@@ -94,6 +97,10 @@ parse_params() {
 		-e | --expiry)
 			expiry="${2-}"
 			shift
+			;;
+		-E | --elliptic-curve)
+			cryptography='-algorithm EC -pkeyopt ec_paramgen_curve:P-384 -pkeyopt ec_param_enc:named_curve'
+			signature='sha384'
 			;;
 		-f | --force) force=1 ;;
 		-i | --city)
@@ -178,7 +185,8 @@ $openssl rand -hex 16 >"${ra_dir}/crlnumber"
 [[ -f "${ra_private}/ra.key.pem" ]] && msg "${YELLOW}Private key was already generated, will not overwrite.${NOFORMAT}"
 if [[ ! -f "${ra_private}/ra.key.pem" ]]; then
 	msg "Creating key for the root certificate authority\n"
-	$openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 \
+	# shellcheck disable=SC2086
+	$openssl genpkey $cryptography \
 		-out "${ra_private}/ra.key.pem" \
 		-aes-256-cbc -pass "pass:${pw}"
 fi
@@ -204,7 +212,7 @@ if [[ ! -f "${ra_certs}/ra.cert.pem" ]]; then
 		-days "${expiry}" \
 		-extensions v3_ca \
 		-key "${ra_private}/ra.key.pem" \
-		-sha256 \
+		"-${signature}" \
 		-new \
 		-out "${ra_certs}/ra.cert.pem" \
 		-passin "pass:${pw}" \
