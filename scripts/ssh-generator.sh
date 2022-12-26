@@ -114,7 +114,7 @@ if [[ ! -d "${data_dir}" ]]; then
 	mkdir -p "${data_dir}"
 fi
 
-[[ -f "${ca}" && ${force} == 0 ]] && msg "Certificate was already generated, will not overwrite unless '--force' is used."
+[[ -f "${ca}" && ${force} == 0 ]] && msg "${YELLOW}Certificate was already generated, will not overwrite unless '--force' is used.${NOFORMAT}"
 if [[ ! -f "${ca}" || ${force} == 1 ]]; then
 	message=$(printf "Generating OpenSSH CA Key Pair at %s\n" "${data_dir}")
 	msg "${message}"

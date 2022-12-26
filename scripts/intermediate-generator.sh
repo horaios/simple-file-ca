@@ -182,9 +182,9 @@ ra_dir=$(realpath --canonicalize-missing "${ra_dir}")
 ra_cert="${ra_dir}/certs/ra.cert.pem"
 ra_csr="${ra_dir}/csr"
 
-[[ ! -f "${config-}" ]] && die "Parameter 'config' does not point to an existing config file"
-[[ ! -f "${ra_config-}" ]] && die "Parameter 'ra-config' does not point to an existing config file"
-[[ ! -d "${ra_dir-}" ]] && die "Parameter 'ra-dir' does not point to an existing location"
+[[ ! -f "${config-}" ]] && die "${RED}Parameter 'config' does not point to an existing config file${NOFORMAT}"
+[[ ! -f "${ra_config-}" ]] && die "${RED}Parameter 'ra-config' does not point to an existing config file${NOFORMAT}"
+[[ ! -d "${ra_dir-}" ]] && die "${RED}Parameter 'ra-dir' does not point to an existing location${NOFORMAT}"
 
 ca_dirs="certs crl csr newcerts private"
 message=$(printf "Setting up intermediate authority folder structure at '%s'\n" "${ia_dir}")
@@ -197,7 +197,7 @@ touch "${ia_dir}/index.txt"
 $openssl rand -hex 16 >"${ia_dir}/serial"
 $openssl rand -hex 16 >"${ia_dir}/crlnumber"
 
-[[ -f "${ia_private}/ia.key.pem" ]] && msg "Private key was already generated, will not overwrite."
+[[ -f "${ia_private}/ia.key.pem" ]] && msg "${YELLOW}Private key was already generated, will not overwrite.${NOFORMAT}"
 if [[ ! -f "${ia_private}/ia.key.pem" ]]; then
 	msg "Creating key for the intermediate certificate authority\n"
 	$openssl genpkey -algorithm RSA \
@@ -207,11 +207,11 @@ if [[ ! -f "${ia_private}/ia.key.pem" ]]; then
 		-pkeyopt rsa_keygen_bits:4096
 fi
 
-[[ -f "${ia_certs}/ia.cert.pem" && ${force} == 0 ]] && msg "Certificate was already generated, will not overwrite unless '--force' is used."
+[[ -f "${ia_certs}/ia.cert.pem" && ${force} == 0 ]] && msg "${YELLOW}Certificate was already generated, will not overwrite unless '--force' is used.${NOFORMAT}"
 [[ -f "${ia_certs}/ia.cert.pem" && ${force} == 1 ]] && mv "${ia_certs}/ia.cert.pem" "${ia_certs}/retired-$(date --iso-8601=seconds)-ia.cert.pem"
 if [[ -f "${ia_certs}/ia.cert.pem" ]]; then
 	if ! $openssl x509 -checkend 0 -noout -in "${ia_certs}/ia.cert.pem"; then
-		msg "Certificate is expired or about to, will archive and regenerate."
+		msg "${YELLOW}Certificate is expired or about to, will archive and regenerate.${NOFORMAT}"
 		endDate="$(date --date="$($openssl x509 -enddate -noout -in "${ia_certs}/ia.cert.pem" | cut -d= -f 2)" --iso-8601)"
 		mv "${ia_certs}/ia.cert.pem" "${ia_certs}/expired-${endDate}-ia.cert.pem"
 	fi
@@ -246,12 +246,12 @@ if [[ ! -f "${ia_certs}/ia.cert.pem" ]]; then
 		-passin "pass:${ra_pw}"
 fi
 
-[[ ${verbose} == 1 ]] && msg "Verifying the intermediate certificate authority\n"
+msg "${GREEN}Verifying the root certificate authority\n${NOFORMAT}"
 [[ ${verbose} == 1 ]] && $openssl x509 -noout -text -in "${ia_certs}/ia.cert.pem"
 [[ ${verbose} == 1 ]] && $openssl verify -CAfile "${ra_cert}" "${ia_certs}/ia.cert.pem"
 
-msg "Copying the root certificate authority\n"
+msg "${GREEN}Copying the root certificate authority\n${NOFORMAT}"
 cp "${ra_cert}" "${ia_certs}/ca.cert.pem"
 
-msg "Creating the certificate authority chain\n"
+msg "${GREEN}Creating the certificate authority chain\n${NOFORMAT}"
 cat "${ia_certs}/ia.cert.pem" "${ra_cert}" >"${ia_certs}/ca-chain.cert.pem"

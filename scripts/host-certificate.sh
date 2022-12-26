@@ -170,8 +170,8 @@ alt_ip_array=()
 san=''
 extensions=''
 
-[[ ! -f "${config-}" ]] && die "Parameter 'config' does not point to an existing config file"
-[[ ! -d "${ia_dir-}" ]] && die "Parameter 'data-dir' does not point to an existing location"
+[[ ! -f "${config-}" ]] && die "${RED}Parameter 'config' does not point to an existing config file${NOFORMAT}"
+[[ ! -d "${ia_dir-}" ]] && die "${RED}Parameter 'data-dir' does not point to an existing location${NOFORMAT}"
 
 if [[ -z "${out_name-}" ]]; then
 	out_name="${cname}"
@@ -201,7 +201,7 @@ else
 	[[ ${server} == 1 ]] && extensions='server_cert'
 fi
 
-[[ -f "${ia_private}/${out_name}.key.pem" ]] && msg "Private key was already generated, will not overwrite."
+[[ -f "${ia_private}/${out_name}.key.pem" ]] && msg "${YELLOW}Private key was already generated, will not overwrite.${NOFORMAT}"
 if [[ ! -f "${ia_private}/${out_name}.key.pem" ]]; then
 	msg "Creating key for the given cname\n"
 	$openssl genpkey -algorithm RSA \
@@ -215,7 +215,7 @@ retired_at=$(date --iso-8601=seconds)
 [[ -f "${ia_certs}/${out_name}.cert-chain.pem" && ${force} == 1 ]] && mv "${ia_certs}/${out_name}.cert-chain.pem" "${ia_certs}/retired-${retired_at}-${out_name}.cert-chain.pem"
 if [[ -f "${ia_certs}/${out_name}.cert.pem" ]]; then
 	if ! $openssl x509 -checkend 0 -noout -in "${ia_certs}/${out_name}.cert.pem"; then
-		msg "Certificate is expired or about to, will archive and regenerate."
+		msg "${YELLOW}Certificate is expired or about to, will archive and regenerate.${NOFORMAT}"
 		endDate="$(date --date="$($openssl x509 -enddate -noout -in "${ia_certs}/${out_name}.cert.pem" | cut -d= -f 2)" --iso-8601)"
 		mv "${ia_certs}/${out_name}.cert.pem" "${ia_certs}/expired-${endDate}-${out_name}.cert.pem"
 	fi
@@ -252,6 +252,6 @@ if [[ ! -f "${ia_certs}/${out_name}.cert-chain.pem" ]]; then
 	cat "${ia_certs}/${out_name}.cert.pem" "${ia_certs}/ca-chain.cert.pem" >"${ia_certs}/${out_name}.cert-chain.pem"
 fi
 
-[[ ${verbose} == 1 ]] && msg "Verifying the certificate\n"
+msg "${GREEN}Verifying the root certificate authority\n${NOFORMAT}"
 [[ ${verbose} == 1 ]] && $openssl x509 -noout -text -in "${ia_certs}/${out_name}.cert.pem"
 [[ ${verbose} == 1 ]] && $openssl verify -CAfile "${ia_certs}/ca-chain.cert.pem" "${ia_certs}/${out_name}.cert.pem"

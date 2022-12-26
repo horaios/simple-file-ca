@@ -162,7 +162,7 @@ ra_dir="${data_dir}/${a_cname}"
 ra_certs="${ra_dir}/certs"
 ra_private="${ra_dir}/private"
 
-[[ ! -f "${config-}" ]] && die "Parameter 'config' does not point to an existing config file"
+[[ ! -f "${config-}" ]] && die "${RED}Parameter 'config' does not point to an existing config file${NOFORMAT}"
 
 ca_dirs="certs crl csr newcerts private"
 message=$(printf "Setting up root authority folder structure at '%s'\n" "${ra_dir}")
@@ -175,7 +175,7 @@ touch "${ra_dir}/index.txt"
 $openssl rand -hex 16 >"${ra_dir}/serial"
 $openssl rand -hex 16 >"${ra_dir}/crlnumber"
 
-[[ -f "${ra_private}/ra.key.pem" ]] && msg "Private key was already generated, will not overwrite."
+[[ -f "${ra_private}/ra.key.pem" ]] && msg "${YELLOW}Private key was already generated, will not overwrite.${NOFORMAT}"
 if [[ ! -f "${ra_private}/ra.key.pem" ]]; then
 	msg "Creating key for the root certificate authority\n"
 	$openssl genpkey -algorithm RSA \
@@ -185,11 +185,11 @@ if [[ ! -f "${ra_private}/ra.key.pem" ]]; then
 		-pkeyopt rsa_keygen_bits:4096
 fi
 
-[[ -f "${ra_certs}/ra.cert.pem" && ${force} == 0 ]] && msg "Certificate was already generated, will not overwrite unless '--force' is used."
+[[ -f "${ra_certs}/ra.cert.pem" && ${force} == 0 ]] && msg "${YELLOW}Certificate was already generated, will not overwrite unless '--force' is used.${NOFORMAT}"
 [[ -f "${ra_certs}/ra.cert.pem" && ${force} == 1 ]] && mv "${ra_certs}/ra.cert.pem" "${ra_certs}/retired-$(date --iso-8601=seconds)-ra.cert.pem"
 if [[ -f "${ra_certs}/ra.cert.pem" ]]; then
 	if ! $openssl x509 -checkend 0 -noout -in "${ra_certs}/ra.cert.pem"; then
-		msg "Certificate is expired or about to, will archive and regenerate."
+		msg "${YELLOW}Certificate is expired or about to, will archive and regenerate.${NOFORMAT}"
 		endDate="$(date --date="$($openssl x509 -enddate -noout -in "${ra_certs}/ra.cert.pem" | cut -d= -f 2)" --iso-8601=seconds)"
 		mv "${ra_certs}/ra.cert.pem" "${ra_certs}/expired-${endDate}-ra.cert.pem"
 	fi
@@ -213,5 +213,5 @@ if [[ ! -f "${ra_certs}/ra.cert.pem" ]]; then
 		-x509
 fi
 
-[[ ${verbose} == 1 ]] && msg "Verifying the root certificate authority\n"
+[[ ${verbose} == 1 ]] && msg "${GREEN}Verifying the root certificate authority\n${NOFORMAT}"
 [[ ${verbose} == 1 ]] && $openssl x509 -noout -text -in "${ra_certs}/ra.cert.pem"
