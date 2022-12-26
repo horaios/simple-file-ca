@@ -246,11 +246,11 @@ if [[ ! -f "${ia_certs}/ia.cert.pem" ]]; then
 		-passin "pass:${ra_pw}"
 fi
 
-msg "${GREEN}Verifying the root certificate authority\n${NOFORMAT}"
+msg "\n${GREEN}Verifying the root certificate authority${NOFORMAT}"
 [[ ${verbose} == 1 ]] && $openssl x509 -noout -text -in "${ia_certs}/ia.cert.pem"
 $openssl verify -CAfile "${ra_cert}" "${ia_certs}/ia.cert.pem"
 
-msg "${GREEN}Copying the root certificate authority\n${NOFORMAT}"
+msg "\n${GREEN}Copying the root certificate authority\n${NOFORMAT}"
 cp "${ra_cert}" "${ia_certs}/ca.cert.pem"
 
 msg "${GREEN}Creating the certificate authority chain\n${NOFORMAT}"

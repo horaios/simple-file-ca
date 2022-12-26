@@ -252,6 +252,6 @@ if [[ ! -f "${ia_certs}/${out_name}.cert-chain.pem" ]]; then
 	cat "${ia_certs}/${out_name}.cert.pem" "${ia_certs}/ca-chain.cert.pem" >"${ia_certs}/${out_name}.cert-chain.pem"
 fi
 
-msg "${GREEN}Verifying the root certificate authority\n${NOFORMAT}"
+msg "\n${GREEN}Verifying the root certificate authority${NOFORMAT}"
 [[ ${verbose} == 1 ]] && $openssl x509 -noout -text -in "${ia_certs}/${out_name}.cert.pem"
 $openssl verify -CAfile "${ia_certs}/ca-chain.cert.pem" "${ia_certs}/${out_name}.cert.pem"
