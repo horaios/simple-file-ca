@@ -96,6 +96,15 @@ subjectKeyIdentifier            = hash
 authorityKeyIdentifier          = keyid:always,issuer
 basicConstraints                = critical, CA:true
 keyUsage                        = critical, digitalSignature, cRLSign, keyCertSign
+nameConstraints                 = critical, @name_constraints
+
+[ name_constraints ]
+# Ensure certificates can only be generated for the permitted value ranges
+permitted;DNS.0                 = .test
+permitted;IP.0                  = 127.0.0.0/255.0.0.0
+permitted;IP.1                  = 10.0.0.0/255.0.0.0
+permitted;IP.2                  = 172.16.0.0/255.240.0.0
+permitted;IP.3                  = 192.168.0.0/255.255.0.0
 
 [ v3_intermediate_ca ]
 # Extensions for a typical intermediate CA (`man x509v3_config`).
@@ -103,6 +112,15 @@ subjectKeyIdentifier            = hash
 authorityKeyIdentifier          = keyid:always,issuer
 basicConstraints                = critical, CA:true, pathlen:0
 keyUsage                        = critical, digitalSignature, cRLSign, keyCertSign
+nameConstraints                 = critical, @name_constraints
+
+[ name_constraints ]
+# Ensure certificates can only be generated for the permitted value ranges
+permitted;DNS.0                 = .test
+permitted;IP.0                  = 127.0.0.0/255.0.0.0
+permitted;IP.1                  = 10.0.0.0/255.0.0.0
+permitted;IP.2                  = 172.16.0.0/255.240.0.0
+permitted;IP.3                  = 192.168.0.0/255.255.0.0
 
 [ usr_cert ]
 # Extensions for client certificates (`man x509v3_config`).

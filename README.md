@@ -94,7 +94,7 @@ A secondary `root_env.cnf` exists that can also be used if instead of putting fi
 you want to supply configuration values as environment variables.
 
 1. Adapt the configuration files in the `config` folder to your needs by changing the values in
-   the `[ req_distinguished_name ]` section
+   the `[ req_distinguished_name ]` section and the values in the `[ name_constraints ]` section of the root config.
 2. Generate a root certificate authority:
    ```bash
    ./scripts/root-generator.sh -p 'rootpassword' -c ./config/root.cnf -d ./data -n 'root-ca-name'

@@ -15,21 +15,22 @@ usage() {
 Usage: $(basename "${BASH_SOURCE[0]}") [-h] [-v]
 This script can be used to generate a root certificate authority.
 Available options:
--h, --help      Print this help and exit
--v, --verbose   Print script debug info
--c, --config    OpenSSL configuration file
--d, --data-dir  Target directory where to store the CA
--e, --expiry    After how many days the certificate expires (default 7300)
--f, --force     WILL OVERWRITE EXISTING CERTIFICATE
--i, --city      City of the certificate authority
--l, --openssl   The path to the OpenSSL binary to use
--m, --email     E-Mail of the certificate authority
--n, --cname     Common name for the certificate authority
--o, --org       Organization of the certificate authority
--p, --pw        Supply the authority password
--s, --state     State/Province of the certificate authority
--t, --unit      Organizational Unit of the certificate authority
--u, --country   Country of the certificate authority
+-h, --help                Print this help and exit
+-v, --verbose             Print script debug info
+-c, --config              OpenSSL configuration file
+-d, --data-dir            Target directory where to store the CA
+-e, --expiry              After how many days the certificate expires (default 7300)
+-f, --force               WILL OVERWRITE EXISTING CERTIFICATE
+-i, --city                City of the certificate authority
+-l, --openssl             The path to the OpenSSL binary to use
+-m, --email               E-Mail of the certificate authority
+-n, --cname               Common name for the certificate authority
+-n, --name-constraints    IP name constraints to add to the CA
+-o, --org                 Organization of the certificate authority
+-p, --pw                  Supply the authority password
+-s, --state               State/Province of the certificate authority
+-t, --unit                Organizational Unit of the certificate authority
+-u, --country             Country of the certificate authority
 EOF
 	exit
 }
@@ -68,6 +69,7 @@ parse_params() {
 	a_organization=''
 	a_state=''
 	a_unit=''
+	a_name_constraints=''
 	config=''
 	data_dir=''
 	expiry=7300
@@ -108,6 +110,10 @@ parse_params() {
 			;;
 		-n | --cname)
 			a_cname="${2-}"
+			shift
+			;;
+		-N | --name-constraints)
+			a_name_constraints="${2-}"
 			shift
 			;;
 		-o | --org)
@@ -194,6 +200,7 @@ if [[ ! -f "${ra_certs}/ra.cert.pem" ]]; then
 	OPENSSL_AUTHORITY_BASE="${data_dir}" OPENSSL_AUTHORITY_COUNTRY="${a_country}" OPENSSL_AUTHORITY_STATE="${a_state}" \
 		OPENSSL_AUTHORITY_CITY="${a_city}" OPENSSL_AUTHORITY_ORG="${a_organization}" OPENSSL_AUTHORITY_UNIT="${a_unit}" \
 		OPENSSL_AUTHORITY_CNAME="${a_cname}" OPENSSL_AUTHORITY_EMAIL="${a_email}" \
+		OPENSSL_AUTHORITY_NAME_CONSTRAINTS="${a_name_constraints}" \
 		$openssl req \
 		-config "${config}" \
 		-days "${expiry}" \
