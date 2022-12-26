@@ -178,11 +178,9 @@ $openssl rand -hex 16 >"${ra_dir}/crlnumber"
 [[ -f "${ra_private}/ra.key.pem" ]] && msg "${YELLOW}Private key was already generated, will not overwrite.${NOFORMAT}"
 if [[ ! -f "${ra_private}/ra.key.pem" ]]; then
 	msg "Creating key for the root certificate authority\n"
-	$openssl genpkey -algorithm RSA \
-		-aes-256-cbc \
+	$openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 \
 		-out "${ra_private}/ra.key.pem" \
-		-pass "pass:${pw}" \
-		-pkeyopt rsa_keygen_bits:4096
+		-aes-256-cbc -pass "pass:${pw}"
 fi
 
 [[ -f "${ra_certs}/ra.cert.pem" && ${force} == 0 ]] && msg "${YELLOW}Certificate was already generated, will not overwrite unless '--force' is used.${NOFORMAT}"

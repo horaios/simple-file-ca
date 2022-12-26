@@ -200,11 +200,9 @@ $openssl rand -hex 16 >"${ia_dir}/crlnumber"
 [[ -f "${ia_private}/ia.key.pem" ]] && msg "${YELLOW}Private key was already generated, will not overwrite.${NOFORMAT}"
 if [[ ! -f "${ia_private}/ia.key.pem" ]]; then
 	msg "Creating key for the intermediate certificate authority\n"
-	$openssl genpkey -algorithm RSA \
-		-aes-256-cbc \
+	$openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 \
 		-out "${ia_private}/ia.key.pem" \
-		-pass "pass:${ia_pw}" \
-		-pkeyopt rsa_keygen_bits:4096
+		-aes-256-cbc -pass "pass:${ia_pw}"
 fi
 
 [[ -f "${ia_certs}/ia.cert.pem" && ${force} == 0 ]] && msg "${YELLOW}Certificate was already generated, will not overwrite unless '--force' is used.${NOFORMAT}"

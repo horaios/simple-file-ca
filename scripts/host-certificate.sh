@@ -204,9 +204,8 @@ fi
 [[ -f "${ia_private}/${out_name}.key.pem" ]] && msg "${YELLOW}Private key was already generated, will not overwrite.${NOFORMAT}"
 if [[ ! -f "${ia_private}/${out_name}.key.pem" ]]; then
 	msg "Creating key for the given cname\n"
-	$openssl genpkey -algorithm RSA \
-		-out "${ia_private}/${out_name}.key.pem" \
-		-pkeyopt rsa_keygen_bits:4096
+	$openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 \
+		-out "${ia_private}/${out_name}.key.pem"
 fi
 
 retired_at=$(date --iso-8601=seconds)
