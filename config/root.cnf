@@ -2,9 +2,9 @@
 
 [ ca ]
 # `man ca`
-default_ca                      = CA_default
+default_ca                      = ca_default
 
-[ CA_default ]
+[ ca_default ]
 # Directory and file locations.
 dir                             = ${ENV::OPENSSL_AUTHORITY_BASE}
 certs                           = $dir/certs
