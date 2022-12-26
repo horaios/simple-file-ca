@@ -95,7 +95,7 @@ emailAddress                    = email@example.org
 subjectKeyIdentifier            = hash
 authorityKeyIdentifier          = keyid:always,issuer
 basicConstraints                = critical, CA:true
-keyUsage                        = critical, digitalSignature, cRLSign, keyCertSign
+keyUsage                        = critical, cRLSign, keyCertSign
 nameConstraints                 = critical, @name_constraints
 
 [ name_constraints ]
@@ -113,6 +113,7 @@ authorityKeyIdentifier          = keyid:always,issuer
 basicConstraints                = critical, CA:true, pathlen:0
 keyUsage                        = critical, digitalSignature, cRLSign, keyCertSign
 nameConstraints                 = critical, @name_constraints
+extendedKeyUsage                = clientAuth, serverAuth
 
 [ name_constraints ]
 # Ensure certificates can only be generated for the permitted value ranges
