@@ -254,4 +254,4 @@ fi
 
 msg "${GREEN}Verifying the root certificate authority\n${NOFORMAT}"
 [[ ${verbose} == 1 ]] && $openssl x509 -noout -text -in "${ia_certs}/${out_name}.cert.pem"
-[[ ${verbose} == 1 ]] && $openssl verify -CAfile "${ia_certs}/ca-chain.cert.pem" "${ia_certs}/${out_name}.cert.pem"
+$openssl verify -CAfile "${ia_certs}/ca-chain.cert.pem" "${ia_certs}/${out_name}.cert.pem"

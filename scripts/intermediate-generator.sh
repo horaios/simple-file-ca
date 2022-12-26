@@ -248,7 +248,7 @@ fi
 
 msg "${GREEN}Verifying the root certificate authority\n${NOFORMAT}"
 [[ ${verbose} == 1 ]] && $openssl x509 -noout -text -in "${ia_certs}/ia.cert.pem"
-[[ ${verbose} == 1 ]] && $openssl verify -CAfile "${ra_cert}" "${ia_certs}/ia.cert.pem"
+$openssl verify -CAfile "${ra_cert}" "${ia_certs}/ia.cert.pem"
 
 msg "${GREEN}Copying the root certificate authority\n${NOFORMAT}"
 cp "${ra_cert}" "${ia_certs}/ca.cert.pem"
