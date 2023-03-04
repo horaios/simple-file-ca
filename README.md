@@ -94,23 +94,23 @@ A secondary `root_env.cnf` exists that can also be used if instead of putting fi
 you want to supply configuration values as environment variables.
 
 1. Adapt the configuration files in the `config` folder to your needs by changing the values in
-   the `[ req_distinguished_name ]` section and the values in the `[ name_constraints ]` section of the root config.
+  the `[ req_distinguished_name ]` section and the values in the `[ name_constraints ]` section of the root config.
 2. Generate a root certificate authority:
-   ```bash
-   ./scripts/root-generator.sh -p 'rootpassword' -c ./config/root.cnf -d ./data -n 'root-ca-name'
-   ```
+  ```bash
+  ./scripts/root-generator.sh -p 'rootpassword' -c ./config/root.cnf -d ./data -n 'root-ca-name'
+  ```
 3. Generate an intermediate certificate authority:
-   ```bash
-   ./scripts/intermediate-generator.sh -r ./data/root-ca-name \
-   -w 'rootpassword' -g ./config/root.cnf \
-   -p 'intermediatepassword' -c ./config/intermediate.cnf \
-   -d ./data \
-   -n 'intermediate-ca-name'
-   ```
+  ```bash
+  ./scripts/intermediate-generator.sh -r ./data/root-ca-name \
+  -w 'rootpassword' -g ./config/root.cnf \
+  -p 'intermediatepassword' -c ./config/intermediate.cnf \
+  -d ./data \
+  -n 'intermediate-ca-name'
+  ```
 4. Generate an SSH certificate authority:
-   ```bash
-   ./scripts/ssh-generator.sh -d ./data -n 'ssh-ca' -p 'sshpassword'
-   ```
+  ```bash
+  ./scripts/ssh-generator.sh -d ./data -n 'ssh-ca' -p 'sshpassword'
+  ```
 
 ### Generating new Host Certificates
 
