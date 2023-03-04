@@ -64,12 +64,12 @@ $ PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH" ./scripts/host-certificat
 ### Windows
 
 - For a Bash based environment it is easiest to use [Git for Windows](https://gitforwindows.org)
-	- make sure to select the Windows Terminal Profile Fragment during installation for a better user experience later
-	  on
-	- also make sure to use the Windows Secure Channel library if you plan on rolling out certificates to your machine
-	  otherwise you'll have to manually patch the bundled certificate bundle
-	- make sure to use "Checkout as-is, commit as-is" to not break line endings of existing files
-	- this includes a compatible OpenSSH and a compatible OpenSSL version by default
+  - make sure to select the Windows Terminal Profile Fragment during installation for a better user experience later
+    on
+  - also make sure to use the Windows Secure Channel library if you plan on rolling out certificates to your machine
+    otherwise you'll have to manually patch the bundled certificate bundle
+  - make sure to use "Checkout as-is, commit as-is" to not break line endings of existing files
+  - this includes a compatible OpenSSH and a compatible OpenSSL version by default
 - Instead of using the MinTTY console installed by Git consider
   use [Windows Terminal](https://github.com/microsoft/terminal) instead for a better user experience
 - For a simple installation consider using [Scoop](https://scoop.sh)

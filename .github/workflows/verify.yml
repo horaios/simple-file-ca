@@ -1,14 +1,14 @@
-name: Test
+name: Verify
 
+# yamllint disable-line rule:truthy
 on: [push, pull_request]
 
 permissions:
   contents: read
 
 jobs:
-  shellcheck:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: bewuethr/shellcheck-action@v2
-
