@@ -102,10 +102,10 @@ you want to supply configuration values as environment variables.
 3. Generate an intermediate certificate authority:
   ```bash
   ./scripts/intermediate-generator.sh -r ./data/root-ca-name \
-  -w 'rootpassword' -g ./config/root.cnf \
-  -p 'intermediatepassword' -c ./config/intermediate.cnf \
-  -d ./data \
-  -n 'intermediate-ca-name'
+    -w 'rootpassword' -g ./config/root.cnf \
+    -p 'intermediatepassword' -c ./config/intermediate.cnf \
+    -d ./data \
+    -n 'intermediate-ca-name'
   ```
 4. Generate an SSH certificate authority:
   ```bash
@@ -119,10 +119,10 @@ and intermediate certificate authorities:
 
 ```bash
 ./scripts/host-certificate.sh -c ./config/intermediate.cnf -d ./data/intermediate-ca-name \
- -p 'intermediatepassword' \
- -n 'host cname' \
- -t 'altname,altname.local' \
- --client --server
+  -p 'intermediatepassword' \
+  -n 'host cname' \
+  -t 'altname,altname.local' \
+  --client --server
 ```
 
 Don't forget to read the documentation via `--help` to see what other flags and settings can be specified.
