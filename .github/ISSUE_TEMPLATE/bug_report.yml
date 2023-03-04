@@ -34,4 +34,3 @@ body:
       placeholder: What happened instead?
     validations:
       required: true
-
