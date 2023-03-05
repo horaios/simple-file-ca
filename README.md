@@ -22,17 +22,27 @@ The shell script template used for the generator scripts is the MIT licensed
 
 ### macOS
 
-Install OpenSSL via e.g. [Homebrew](https://formulae.brew.sh/formula/openssl@3) – macOS ships with LibreSSL which is not
-supported. The path at which the OpenSSL binary is located can be found with:
+Install OpenSSL via e.g. [Homebrew](https://formulae.brew.sh/formula/openssl@3) because macOS ships with LibreSSL which
+is not supported. The path at which the OpenSSL binary is located can be found with:
 
 ```bash
-$ brew info openssl@3
+brew info openssl@3
+```
+
+```output
 # Documentation and Caveats...
 If you need to have openssl@3 first in your PATH, run:
   echo 'export PATH="/usr/local/opt/openssl@3/bin:$PATH"' >> /Users/ng/.bash_profile
 # ...
-# This means that openssl should be available at /usr/local/opt/openssl@3/bin/openssl
-$ /usr/local/opt/openssl@3/bin/openssl version
+```
+
+This means that openssl should be available at `/usr/local/opt/openssl@3/bin/openssl`:
+
+```bash
+/usr/local/opt/openssl@3/bin/openssl version
+```
+
+```output
 OpenSSL 3.0.0 7 sep 2021 (Library: OpenSSL 3.0.0 7 sep 2021)
 ```
 
@@ -44,13 +54,22 @@ same.
 Additionally, a GNU compatible `date` binary is required, for example available via:
 
 ```bash
-$ brew info coreutils
+brew info coreutils
+```
+
+```output
 # Documentation and Caveats...
 If you need to use these commands with their normal names, you can add a "gnubin" directory to your PATH with:
   PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
 # ...
-# This means that date should be available at /usr/local/opt/coreutils/libexec/gnubin/date
-$ /usr/local/opt/coreutils/libexec/gnubin/date --version
+```
+
+This means that date should be available at `/usr/local/opt/coreutils/libexec/gnubin/date`:
+```bash
+/usr/local/opt/coreutils/libexec/gnubin/date --version
+```
+
+```output
 date (GNU coreutils) 9.0
 ```
 
@@ -58,7 +77,7 @@ If you don't want to put this permanently onto your path you can simply prefix a
 `PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"`, i.e.:
 
 ```bash
-$ PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH" ./scripts/host-certificate.sh
+PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH" ./scripts/host-certificate.sh
 ```
 
 ### Windows
