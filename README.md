@@ -65,6 +65,7 @@ If you need to use these commands with their normal names, you can add a "gnubin
 ```
 
 This means that date should be available at `/usr/local/opt/coreutils/libexec/gnubin/date`:
+
 ```bash
 /usr/local/opt/coreutils/libexec/gnubin/date --version
 ```
@@ -112,13 +113,17 @@ environment variables: `SIMPLE_CA_ROOT_PASSWORD`, `SIMPLE_CA_INTERMEDIATE_PASSWO
 A secondary `root_env.cnf` exists that can also be used if instead of putting fixed values into a OpenSSH config file
 you want to supply configuration values as environment variables.
 
+<!-- markdownlint-disable MD029 -->
 1. Adapt the configuration files in the `config` folder to your needs by changing the values in
   the `[ req_distinguished_name ]` section and the values in the `[ name_constraints ]` section of the root config.
 2. Generate a root certificate authority:
+
   ```bash
   ./scripts/root-generator.sh -p 'rootpassword' -c ./config/root.cnf -d ./data -n 'root-ca-name'
   ```
+
 3. Generate an intermediate certificate authority:
+
   ```bash
   ./scripts/intermediate-generator.sh -r ./data/root-ca-name \
     -w 'rootpassword' -g ./config/root.cnf \
@@ -126,10 +131,13 @@ you want to supply configuration values as environment variables.
     -d ./data \
     -n 'intermediate-ca-name'
   ```
+
 4. Generate an SSH certificate authority:
+
   ```bash
   ./scripts/ssh-generator.sh -d ./data -n 'ssh-ca' -p 'sshpassword'
   ```
+<!-- markdownlint-enable MD029 -->
 
 ### Generating new Host Certificates
 
