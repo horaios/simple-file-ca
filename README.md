@@ -92,7 +92,7 @@ PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH" ./scripts/host-certificate.
   - this includes a compatible OpenSSH and a compatible OpenSSL version by default
 - Instead of using the MinTTY console installed by Git consider
   use [Windows Terminal](https://github.com/microsoft/terminal) instead for a better user experience
-- For a simple installation consider using [Scoop](https://scoop.sh)
+- For a simple installation consider using [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/)
 
 ## Run in local Bash
 
