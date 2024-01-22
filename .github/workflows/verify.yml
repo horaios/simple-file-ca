@@ -22,4 +22,4 @@ jobs:
           pip install yamllint
           yamllint .
       - uses: bewuethr/shellcheck-action@v2
-      - uses: DavidAnson/markdownlint-cli2-action@v14
+      - uses: DavidAnson/markdownlint-cli2-action@v15
