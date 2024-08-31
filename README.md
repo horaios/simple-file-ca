@@ -4,14 +4,13 @@ Simple file based Certificate Authority with OpenSSL.
 
 ---
 
-This is a simple certificate authority based and build around the materials offered by e.g.
-[Jamie Linux](https://jamielinux.com/docs/openssl-certificate-authority/index.html).
+This is a simple certificate authority based and build around the materials offered by e.g. [Jamie Linux](https://jamielinux.com/docs/openssl-certificate-authority/index.html).
 
 Before using this also have a look at e.g. [CFSSL](https://github.com/cloudflare/cfssl). The scripts contained in this
 repository are a showcase/local development setup implementation of an TLS Certificate Authority setup only.
 
-The shell script template used for the generator scripts is the MIT licensed
-[script-template.sh](https://gist.github.com/m-radzikowski/53e0b39e9a59a1518990e76c2bff8038) by Maciej Radzikowski.
+The shell script template used for the generator scripts is the MIT licensed [script-template.sh](https://gist.github.com/m-radzikowski/53e0b39e9a59a1518990e76c2bff8038)
+by Maciej Radzikowski.
 
 ## Required Software
 
@@ -90,8 +89,8 @@ PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH" ./scripts/host-certificate.
     otherwise you'll have to manually patch the bundled certificate bundle
   - make sure to use "Checkout as-is, commit as-is" to not break line endings of existing files
   - this includes a compatible OpenSSH and a compatible OpenSSL version by default
-- Instead of using the MinTTY console installed by Git consider
-  use [Windows Terminal](https://github.com/microsoft/terminal) instead for a better user experience
+- Instead of using the MinTTY console installed by Git consider use [Windows Terminal](https://github.com/microsoft/terminal)
+  instead for a better user experience
 - For a simple installation consider using [winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/)
 
 ## Run in local Bash
