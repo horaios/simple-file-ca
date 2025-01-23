@@ -152,3 +152,15 @@ and intermediate certificate authorities:
 ```
 
 Don't forget to read the documentation via `--help` to see what other flags and settings can be specified.
+
+## Further Reading
+
+There are a lot of interesting and relevant documents and tools around for self-managing TLS infrastructure. Below is a
+small selection:
+
+- [Cloudflare's PKI and TLS toolkit](https://github.com/cloudflare/cfssl)
+- [smallstep ca](https://smallstep.com/docs/step-ca/)
+- [Let's Encrypt: Boulder](https://github.com/letsencrypt/boulder)
+- [Jamie Linux: OpenSSL Certificate Authority](https://jamielinux.com/docs/openssl-certificate-authority/index.html)
+- [Banish OEM self-signed certs forever and roll your own private LetsEncrypt](https://arstechnica.com/information-technology/2024/03/banish-oem-self-signed-certs-forever-and-roll-your-own-private-letsencrypt/)
+- [Running one's own root Certificate Authority in 2023](https://wejn.org/2023/09/running-ones-own-root-certificate-authority-in-2023/)
